@@ -58,8 +58,21 @@ def do_login(driver, wait):
     login_button.click()
     print("Clicked login button")
 
-    time.sleep(3)
-    print(f"Logged in! URL: {driver.current_url}")
+    time.sleep(5)  # ждём дольше
+    print(f"After login URL: {driver.current_url}")
+
+    # DEBUG: проверяем какие кнопки после логина
+    try:
+        all_buttons = driver.find_elements(By.XPATH, "//span[@class='v-button-caption']")
+        btn_texts = [b.text for b in all_buttons if b.text.strip()]
+        print(f"  [POST-LOGIN BUTTONS] {btn_texts}")
+        if 'Кіру' in btn_texts or 'Войти' in btn_texts:
+            print("  !!! LOGIN FAILED - still on login page !!!")
+        else:
+            print("  LOGIN SUCCESS - inside the app")
+    except Exception as e:
+        print(f"  Error checking buttons: {e}")
+
     return True
 
 
