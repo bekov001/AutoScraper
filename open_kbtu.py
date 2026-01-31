@@ -40,16 +40,17 @@ def do_login(driver, wait):
     driver.get(LOGIN_URL)
     print("Page opened successfully!")
 
-    username_xpath = "/html/body/div[1]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div/div[2]/div/table/tbody/tr[1]/td[3]/div/input"
-    username_field = wait.until(EC.presence_of_element_located((By.XPATH, username_xpath)))
-
-    password_xpath = "/html/body/div[1]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div/div[2]/div/table/tbody/tr[2]/td[3]/input"
-    password_field = driver.find_element(By.XPATH, password_xpath)
-
+    # Username - это combobox (выпадающий список с возможностью ввода)
+    # Ищем input внутри v-filterselect
+    username_field = wait.until(EC.presence_of_element_located((By.XPATH, "//input[contains(@class, 'v-filterselect-input')]")))
     username_field.clear()
     username_field.send_keys(USERNAME)
+    time.sleep(0.5)  # дать время на ввод
     actual_username = username_field.get_attribute('value')
     print(f"Entered username: {USERNAME} (actual in field: {actual_username})")
+
+    # Password field
+    password_field = driver.find_element(By.XPATH, "//input[@type='password']")
 
     password_field.clear()
     password_field.send_keys(PASSWORD)
