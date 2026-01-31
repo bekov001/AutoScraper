@@ -61,6 +61,23 @@ def do_login(driver, wait):
     time.sleep(5)  # ждём дольше
     print(f"After login URL: {driver.current_url}")
 
+    # DEBUG: ищем ошибки на странице
+    try:
+        errors = driver.find_elements(By.XPATH, "//*[contains(@class, 'error') or contains(@class, 'v-Notification') or contains(@class, 'warning')]")
+        for err in errors:
+            if err.text.strip():
+                print(f"  [ERROR ON PAGE] {err.text}")
+    except:
+        pass
+
+    # DEBUG: выведем весь текст на странице
+    try:
+        body_text = driver.find_element(By.TAG_NAME, "body").text
+        # Возьмем первые 500 символов
+        print(f"  [PAGE TEXT] {body_text[:500]}")
+    except:
+        pass
+
     # DEBUG: проверяем какие кнопки после логина
     try:
         all_buttons = driver.find_elements(By.XPATH, "//span[@class='v-button-caption']")
