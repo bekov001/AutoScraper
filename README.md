@@ -1,6 +1,6 @@
 # KBTU AutoScraper
 
-Selenium script for automatic attendance marking on KBTU Registration Online portal.
+Selenium script for automatic attendance marking on KBTU Registration Online portal. Supports multiple users.
 
 ## Setup
 
@@ -27,9 +27,27 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```
-KBTU_USERNAME=your_username
-KBTU_PASSWORD=your_password
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 ```
+
+Create a `users.json` file with your users:
+
+```json
+[
+  {
+    "username": "student1",
+    "password": "password1",
+    "telegram_chat_id": "123456789"
+  },
+  {
+    "username": "student2",
+    "password": "password2",
+    "telegram_chat_id": "987654321"
+  }
+]
+```
+
+Each user will receive Telegram notifications to their own chat ID when attendance is marked.
 
 ## Usage
 
@@ -39,11 +57,17 @@ python open_kbtu.py
 ```
 
 The script will:
-1. Open Chrome browser
-2. Navigate to https://wsp.kbtu.kz/RegistrationOnline
-3. Log in with your credentials
-4. Look for the "Отметиться" (check-in) button
-5. Click it automatically if available
+1. Load all users from `users.json`
+2. Launch a separate Chrome browser for each user
+3. Log in with their credentials
+4. Look for the "Отметиться" (check-in) button every 35 seconds
+5. Click it automatically if available and send Telegram notification
+
+## Docker
+
+```bash
+docker-compose up -d
+```
 
 ## Requirements
 
